@@ -121,7 +121,7 @@
 
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Height="40">
                     <Button x:Name="HamburgerButton" Style="{StaticResource HamburgerButtonStyle}"
-                            Click="HamburgerButton_Click" VerticalAlignment="Center" Margin="10,0,8,0" Height="40">
+                            Click="HamburgerButton_Click" VerticalAlignment="Center" Margin="10,0,7,0" Height="40">
                         <TextBlock Text="&#xE700;" FontFamily="Segoe MDL2 Assets" FontSize="16" />
                     </Button>
 
