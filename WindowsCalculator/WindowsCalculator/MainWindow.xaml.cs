@@ -19,7 +19,7 @@ namespace WindowsCalculator;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private bool isMenuOpen = false;
+    private bool _isMenuOpen = false;
 
     public MainWindow()
     {
@@ -48,50 +48,57 @@ public partial class MainWindow : Window
         Close();
     }
 
-    // Eveniment pentru butonul hamburger
+    // Event handler for hamburger menu button
     private void HamburgerButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!isMenuOpen)
-            OpenMenu();
-        else
+        if (_isMenuOpen)
+        {
+            // Close menu
             CloseMenu();
+        }
+        else
+        {
+            // Open menu
+            OpenMenu();
+        }
     }
 
-    // Eveniment pentru închiderea meniului când se apasă pe overlay
-    private void CloseMenu_Click(object sender, MouseButtonEventArgs e)
-    {
-        CloseMenu();
-    }
-
-    // Deschide meniul lateral cu animație
     private void OpenMenu()
     {
-        // Creează animația pentru meniu
-        DoubleAnimation menuAnimation = new DoubleAnimation
+        // Create animation to slide the menu in from left to right
+        var animation = new DoubleAnimation
         {
-            From = 0,
-            To = 205, // Lățimea meniului
-            Duration = TimeSpan.FromSeconds(0.3)
+            From = -205,
+            To = 0, // Width of the menu
+            Duration = TimeSpan.FromMilliseconds(250),
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
         };
 
-        SideMenuTransform.BeginAnimation(TranslateTransform.XProperty, menuAnimation);
+        // Apply animation to the TranslateTransform
+        var translateTransform = (TranslateTransform)HamburgerMenuPanel.RenderTransform;
+        translateTransform.BeginAnimation(TranslateTransform.XProperty, animation);
 
-        isMenuOpen = true;
+        _isMenuOpen = true;
+
+        // Ensure hamburger button stays on top
+        HamburgerButton.SetValue(Panel.ZIndexProperty, 100);
     }
 
-    // Închide meniul lateral cu animație
     private void CloseMenu()
     {
-        // Creează animația pentru meniu
-        DoubleAnimation menuAnimation = new DoubleAnimation
+        // Create animation to slide the menu back left
+        var animation = new DoubleAnimation
         {
-            From = 205, // Lățimea meniului
-            To = 0,
-            Duration = TimeSpan.FromSeconds(0.3)
+            From = 0,
+            To = -205,
+            Duration = TimeSpan.FromMilliseconds(250),
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
         };
 
-        SideMenuTransform.BeginAnimation(TranslateTransform.XProperty, menuAnimation);
+        // Apply animation to the TranslateTransform
+        var translateTransform = (TranslateTransform)HamburgerMenuPanel.RenderTransform;
+        translateTransform.BeginAnimation(TranslateTransform.XProperty, animation);
 
-        isMenuOpen = false;
+        _isMenuOpen = false;
     }
 }
