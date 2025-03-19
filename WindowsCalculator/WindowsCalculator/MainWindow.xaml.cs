@@ -20,11 +20,21 @@ namespace WindowsCalculator;
 public partial class MainWindow : Window
 {
     private bool _isMenuOpen = false;
+    private readonly CalculatorViewModel _viewModel;
+    private readonly StandardCalculatorView _standardCalculatorView;
+    private readonly ProgrammerCalculatorView _programmerCalculatorView;
 
     public MainWindow()
     {
         InitializeComponent();
-        DataContext = new CalculatorViewModel();
+        _viewModel = new CalculatorViewModel();
+        
+        // Initialize calculator views
+        _standardCalculatorView = new StandardCalculatorView { DataContext = _viewModel };
+        _programmerCalculatorView = new ProgrammerCalculatorView { DataContext = _viewModel };
+        
+        // Set standard view as default
+        CalculatorViewContent.Content = _standardCalculatorView;
     }
 
     // Event handler for dragging the window from the custom title bar
@@ -100,5 +110,19 @@ public partial class MainWindow : Window
         translateTransform.BeginAnimation(TranslateTransform.XProperty, animation);
 
         _isMenuOpen = false;
+    }
+    
+    // Switch to the Standard calculator view
+    private void StandardButton_Click(object sender, RoutedEventArgs e)
+    {
+        CalculatorViewContent.Content = _standardCalculatorView;
+        CloseMenu();
+    }
+    
+    // Switch to the Programmer calculator view
+    private void ProgrammerButton_Click(object sender, RoutedEventArgs e)
+    {
+        CalculatorViewContent.Content = _programmerCalculatorView;
+        CloseMenu();
     }
 }

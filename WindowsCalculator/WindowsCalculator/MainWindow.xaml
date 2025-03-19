@@ -23,8 +23,6 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30" />
-                <RowDefinition Height="140" />
-                <RowDefinition Height="30" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -114,8 +112,8 @@
             </Grid>
 
             <!-- Hamburger Menu (Slides from left) -->
-            <Grid Grid.Row="1" Grid.RowSpan="3" x:Name="HamburgerMenuPanel" Width="200" HorizontalAlignment="Left"
-                  Panel.ZIndex="-1">
+            <Grid Grid.Row="0" Grid.RowSpan="2" x:Name="HamburgerMenuPanel" Width="200" HorizontalAlignment="Left"
+                  Panel.ZIndex="100">
                 <Grid.RenderTransform>
                     <TranslateTransform X="-205" />
                 </Grid.RenderTransform>
@@ -150,312 +148,28 @@
                 </Grid.Resources>
 
                 <!-- Adding corner radius to the hamburger menu -->
-                <Border Background="#FF2C2C2C" CornerRadius="0,8,8,0">
+                <Border Background="#FF2C2C2C" CornerRadius="0,8,8,0" Margin="0,30,0,0">
                     <StackPanel>
                         <TextBlock Text="Calculator" Foreground="#C6C6C6" FontSize="14" FontWeight="SemiBold" Margin="15,15,0,10" HorizontalAlignment="Left" />
 
                         <Button Content="Standard" Foreground="White" FontSize="14" Height="40"
-                                    Style="{StaticResource MenuButtonStyle}" Margin="5,0,5,0" />
+                                Style="{StaticResource MenuButtonStyle}" Margin="5,0,5,0"
+                                Click="StandardButton_Click" />
 
                         <Button Content="Programmer" Foreground="White" FontSize="14" Height="40"
-                                    Style="{StaticResource MenuButtonStyle}" Margin="5,0,5,0" />
+                                Style="{StaticResource MenuButtonStyle}" Margin="5,0,5,0"
+                                Click="ProgrammerButton_Click" />
 
-                        <TextBlock Text="Help" Foreground="#C6C6C6" FontSize="15" FontWeight="SemiBold" Margin="15,15,0,10" HorizontalAlignment="Left" />
+                        <TextBlock Text="Help" Foreground="#C6C6C6" FontSize="14" FontWeight="SemiBold" Margin="15,15,0,10" HorizontalAlignment="Left" />
 
                         <Button Content="About" Foreground="White" FontSize="14" Height="40"
-                                    Style="{StaticResource MenuButtonStyle}" Margin="5,0,5,2" />
+                                Style="{StaticResource MenuButtonStyle}" Margin="5,0,5,2" />
                     </StackPanel>
                 </Border>
             </Grid>
 
-            <Grid Grid.Row="1" Background="#202020" Panel.ZIndex="-2">
-                <!-- Display Area -->
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="50" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="70" />
-                </Grid.RowDefinitions>
-
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Height="40">
-                    <TextBlock x:Name="TitleTextBlock"
-                               Text="Standard"
-                               Foreground="White"
-                               FontSize="20"
-                               FontWeight="SemiBold"
-                               VerticalAlignment="Center" Margin="15,0,0,0" />
-                </StackPanel>
-
-                <TextBlock Grid.Row="1" x:Name="ExpressionTextBlock"
-                           Text="{Binding ExpressionText}"
-                           Foreground="#BFD6D6D6"
-                           FontSize="14"
-                           TextAlignment="Right"
-                           Margin="10,0,15,0" />
-
-                <TextBlock Grid.Row="2" x:Name="ResultTextBlock"
-                           Text="{Binding DisplayText}"
-                           Foreground="White"
-                           FontSize="48"
-                           FontWeight="SemiBold"
-                           TextAlignment="Right"
-                           Margin="10,0,15,0" />
-            </Grid>
-
-            <!-- Memory Buttons Area -->
-            <Grid Grid.Row="2" Background="#202020" Margin="3,0,3,0" Panel.ZIndex="-5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <Grid.Resources>
-                    <Style x:Key="MemoryButtonStyle" TargetType="Button">
-                        <Setter Property="Background" Value="Transparent" />
-                        <Setter Property="Foreground" Value="White" />
-                        <Setter Property="FontSize" Value="12" />
-                        <Setter Property="FontWeight" Value="SemiBold" />
-                        <Setter Property="Margin" Value="1" />
-                        <Setter Property="BorderThickness" Value="0" />
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="Button">
-                                    <Border x:Name="buttonBorder" CornerRadius="4"
-                                            Background="{TemplateBinding Background}"
-                                            BorderThickness="0">
-                                        <ContentPresenter HorizontalAlignment="Center"
-                                                          VerticalAlignment="Center" />
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="buttonBorder" Property="Background" Value="#2D2D2D" />
-                                        </Trigger>
-                                        <Trigger Property="IsPressed" Value="True">
-                                            <Setter TargetName="buttonBorder" Property="Background" Value="#292929" />
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </Grid.Resources>
-
-                <Button Grid.Column="0" Content="MC" Style="{StaticResource MemoryButtonStyle}" x:Name="MemoryClearButton"
-                        Command="{Binding MemoryClearCommand}" />
-                <Button Grid.Column="1" Content="MR" Style="{StaticResource MemoryButtonStyle}" x:Name="MemoryRecallButton"
-                        Command="{Binding MemoryRecallCommand}" />
-                <Button Grid.Column="2" Content="M+" Style="{StaticResource MemoryButtonStyle}" x:Name="MemoryAddButton"
-                        Command="{Binding MemoryAddCommand}" />
-                <Button Grid.Column="3" Content="M-" Style="{StaticResource MemoryButtonStyle}" x:Name="MemorySubtractButton"
-                        Command="{Binding MemorySubtractCommand}" />
-                <Button Grid.Column="4" Content="MS" Style="{StaticResource MemoryButtonStyle}" x:Name="MemoryStoreButton"
-                        Command="{Binding MemoryStoreCommand}" />
-                <Button Grid.Column="5" Content="M▾" Style="{StaticResource MemoryButtonStyle}" x:Name="MemoryListButton" />
-            </Grid>
-
-            <!-- Buttons Area -->
-            <Grid Grid.Row="3" Margin="3,0,3,3" Panel.ZIndex="-2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <!-- Style pentru butoane cu colțuri rotunjite și efect de hover -->
-                <Grid.Resources>
-                    <!-- Stil pentru butoanele funcțiilor standard (culoare gri deschis) -->
-                    <Style x:Key="ButtonStyle" TargetType="Button">
-                        <Setter Property="Background" Value="#3B3B3B" />
-                        <Setter Property="Foreground" Value="White" />
-                        <Setter Property="FontSize" Value="18" />
-                        <Setter Property="FontWeight" Value="Regular" />
-                        <Setter Property="Margin" Value="1.5" />
-                        <Setter Property="BorderThickness" Value="0" />
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="Button">
-                                    <Border x:Name="buttonBorder" CornerRadius="5"
-                                            Background="{TemplateBinding Background}"
-                                            BorderThickness="0">
-                                        <ContentPresenter HorizontalAlignment="Center"
-                                                          VerticalAlignment="Center" />
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="buttonBorder" Property="Background" Value="#323232" />
-                                        </Trigger>
-                                        <Trigger Property="IsPressed" Value="True">
-                                            <Setter TargetName="buttonBorder" Property="Background" Value="#FF292929" />
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-
-                    <!-- Stil pentru butoanele de funcții speciale (culoare gri inchis) -->
-                    <Style x:Key="SpecialButtonStyle" TargetType="Button">
-                        <Setter Property="Background" Value="#323232" />
-                        <Setter Property="Foreground" Value="White" />
-                        <Setter Property="FontSize" Value="14.5" />
-                        <Setter Property="FontWeight" Value="Regular" />
-                        <Setter Property="Margin" Value="1.5" />
-                        <Setter Property="BorderThickness" Value="0" />
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="Button">
-                                    <Border x:Name="buttonBorder" CornerRadius="5"
-                                            Background="{TemplateBinding Background}"
-                                            BorderThickness="0">
-                                        <ContentPresenter HorizontalAlignment="Center"
-                                                          VerticalAlignment="Center" />
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="buttonBorder" Property="Background" Value="#3B3B3B" />
-                                        </Trigger>
-                                        <Trigger Property="IsPressed" Value="True">
-                                            <Setter TargetName="buttonBorder" Property="Background" Value="#FF292929" />
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-
-                    <!-- Stil pentru butoanele de operații (+, -, ×, ÷) -->
-                    <Style x:Key="MathOperationButtonStyle" TargetType="Button">
-                        <Setter Property="Background" Value="#323232" />
-                        <Setter Property="Foreground" Value="White" />
-                        <Setter Property="FontSize" Value="28" />
-                        <Setter Property="FontWeight" Value="Light" />
-                        <Setter Property="Margin" Value="1.5" />
-                        <Setter Property="BorderThickness" Value="0" />
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="Button">
-                                    <Border x:Name="buttonBorder" CornerRadius="5"
-                                            Background="{TemplateBinding Background}"
-                                            BorderThickness="0">
-                                        <ContentPresenter HorizontalAlignment="Center"
-                                                          VerticalAlignment="Center" />
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="buttonBorder" Property="Background" Value="#3B3B3B" />
-                                        </Trigger>
-                                        <Trigger Property="IsPressed" Value="True">
-                                            <Setter TargetName="buttonBorder" Property="Background" Value="#FF292929" />
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-
-                    <!-- Stil pentru butonul = (culoare albastru) -->
-                    <Style x:Key="OperationButtonStyle" TargetType="Button">
-                        <Setter Property="Background" Value="#4CC2FF" />
-                        <Setter Property="Foreground" Value="Black" />
-                        <Setter Property="FontSize" Value="30" />
-                        <Setter Property="FontWeight" Value="light" />
-                        <Setter Property="Margin" Value="1.5" />
-                        <Setter Property="BorderThickness" Value="0" />
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="Button">
-                                    <Border x:Name="buttonBorder" CornerRadius="5"
-                                            Background="{TemplateBinding Background}"
-                                            BorderThickness="0">
-                                        <ContentPresenter HorizontalAlignment="Center"
-                                                          VerticalAlignment="Center" />
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="buttonBorder" Property="Background" Value="#47B1E8" />
-                                        </Trigger>
-                                        <Trigger Property="IsPressed" Value="True">
-                                            <Setter TargetName="buttonBorder" Property="Background" Value="#42A1D2" />
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </Grid.Resources>
-
-                <!-- Row 0 - Special Functions -->
-                <Button Grid.Row="0" Grid.Column="0" Content="%" Style="{StaticResource SpecialButtonStyle}"
-                        Command="{Binding PercentageCommand}" />
-                <Button Grid.Row="0" Grid.Column="1" Content="CE" Style="{StaticResource SpecialButtonStyle}"
-                        Command="{Binding ClearEntryCommand}" />
-                <Button Grid.Row="0" Grid.Column="2" Content="C" Style="{StaticResource SpecialButtonStyle}"
-                        Command="{Binding ClearCommand}" />
-                <Button Grid.Row="0" Grid.Column="3" Content="⌫" Style="{StaticResource SpecialButtonStyle}"
-                        Command="{Binding BackspaceCommand}" />
-
-                <!-- Row 1 - First Row of Functions -->
-                <Button Grid.Row="1" Grid.Column="0" Content="1/x" Style="{StaticResource SpecialButtonStyle}"
-                        Command="{Binding SpecialFunctionCommand}" CommandParameter="1/x" />
-                <Button Grid.Row="1" Grid.Column="1" Content="x²" Style="{StaticResource SpecialButtonStyle}"
-                        Command="{Binding SpecialFunctionCommand}" CommandParameter="x²" />
-                <Button Grid.Row="1" Grid.Column="2" Content="√" Style="{StaticResource SpecialButtonStyle}"
-                        Command="{Binding SpecialFunctionCommand}" CommandParameter="√" />
-                <Button Grid.Row="1" Grid.Column="3" Content="÷" Style="{StaticResource MathOperationButtonStyle}"
-                        Command="{Binding OperationCommand}" CommandParameter="÷" />
-
-                <!-- Row 2 - 7,8,9,× -->
-                <Button Grid.Row="2" Grid.Column="0" Content="7" Style="{StaticResource ButtonStyle}"
-                        Command="{Binding NumberCommand}" CommandParameter="7" />
-                <Button Grid.Row="2" Grid.Column="1" Content="8" Style="{StaticResource ButtonStyle}"
-                        Command="{Binding NumberCommand}" CommandParameter="8" />
-                <Button Grid.Row="2" Grid.Column="2" Content="9" Style="{StaticResource ButtonStyle}"
-                        Command="{Binding NumberCommand}" CommandParameter="9" />
-                <Button Grid.Row="2" Grid.Column="3" Content="×" Style="{StaticResource MathOperationButtonStyle}"
-                        Command="{Binding OperationCommand}" CommandParameter="×" />
-
-                <!-- Row 3 - 4,5,6,- -->
-                <Button Grid.Row="3" Grid.Column="0" Content="4" Style="{StaticResource ButtonStyle}"
-                        Command="{Binding NumberCommand}" CommandParameter="4" />
-                <Button Grid.Row="3" Grid.Column="1" Content="5" Style="{StaticResource ButtonStyle}"
-                        Command="{Binding NumberCommand}" CommandParameter="5" />
-                <Button Grid.Row="3" Grid.Column="2" Content="6" Style="{StaticResource ButtonStyle}"
-                        Command="{Binding NumberCommand}" CommandParameter="6" />
-                <Button Grid.Row="3" Grid.Column="3" Content="-" Style="{StaticResource MathOperationButtonStyle}"
-                        Command="{Binding OperationCommand}" CommandParameter="-" />
-
-                <!-- Row 4 - 1,2,3,+ -->
-                <Button Grid.Row="4" Grid.Column="0" Content="1" Style="{StaticResource ButtonStyle}"
-                        Command="{Binding NumberCommand}" CommandParameter="1" />
-                <Button Grid.Row="4" Grid.Column="1" Content="2" Style="{StaticResource ButtonStyle}"
-                        Command="{Binding NumberCommand}" CommandParameter="2" />
-                <Button Grid.Row="4" Grid.Column="2" Content="3" Style="{StaticResource ButtonStyle}"
-                        Command="{Binding NumberCommand}" CommandParameter="3" />
-                <Button Grid.Row="4" Grid.Column="3" Content="+" Style="{StaticResource MathOperationButtonStyle}"
-                        Command="{Binding OperationCommand}" CommandParameter="+" />
-
-                <!-- Row 5 - +/-,0,.,= -->
-                <Button Grid.Row="5" Grid.Column="0" Content="±" Style="{StaticResource ButtonStyle}"
-                        Command="{Binding NegateCommand}" />
-                <Button Grid.Row="5" Grid.Column="1" Content="0" Style="{StaticResource ButtonStyle}"
-                        Command="{Binding NumberCommand}" CommandParameter="0" />
-                <Button Grid.Row="5" Grid.Column="2" Content="." Style="{StaticResource ButtonStyle}"
-                        Command="{Binding DecimalPointCommand}" />
-                <Button Grid.Row="5" Grid.Column="3" Content="=" Style="{StaticResource OperationButtonStyle}"
-                        Command="{Binding EqualsCommand}" />
-            </Grid>
+            <!-- Content area for calculator views -->
+            <ContentControl Grid.Row="1" x:Name="CalculatorViewContent" />
         </Grid>
     </Border>
 </Window>
