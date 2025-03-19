@@ -62,12 +62,24 @@
                 <!-- Left Side: App Icon and Menu Button -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal">
                     <Button x:Name="HamburgerButton"
-                            Style="{StaticResource TitleBarButtonStyle}"
-                            Content="&#xE700;"
-                            FontSize="14"
-                            Width="40" Height="30"
-                            Click="HamburgerButton_Click" />
-
+                        Style="{StaticResource TitleBarButtonStyle}"
+                        Content="&#xE700;"
+                        FontSize="14"
+                        Width="40" Height="30"
+                        Click="HamburgerButton_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8,0,0,0">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="#505050" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5,0,0,0">
                         <Image Source="Calculator.ico" Width="14" Height="14" />
                         <TextBlock Text="Calculator" Foreground="White" FontSize="12" Margin="6,0,0,0"
@@ -112,10 +124,10 @@
             </Grid>
 
             <!-- Hamburger Menu (Slides from left) -->
-            <Grid Grid.Row="0" Grid.RowSpan="2" x:Name="HamburgerMenuPanel" Width="200" HorizontalAlignment="Left"
+            <Grid Grid.Row="0" Grid.RowSpan="2" x:Name="HamburgerMenuPanel" Width="250" HorizontalAlignment="Left"
                   Panel.ZIndex="100">
                 <Grid.RenderTransform>
-                    <TranslateTransform X="-205" />
+                    <TranslateTransform X="-255" />
                 </Grid.RenderTransform>
 
                 <Grid.Resources>
@@ -148,7 +160,7 @@
                 </Grid.Resources>
 
                 <!-- Adding corner radius to the hamburger menu -->
-                <Border Background="#FF2C2C2C" CornerRadius="0,8,8,0" Margin="0,30,0,0">
+                <Border Background="#FF2C2C2C" CornerRadius="0,8,8,8" Margin="0,30,0,0" BorderBrush="#FF414141" BorderThickness="0,1,1,0">
                     <StackPanel>
                         <TextBlock Text="Calculator" Foreground="#C6C6C6" FontSize="14" FontWeight="SemiBold" Margin="15,15,0,10" HorizontalAlignment="Left" />
 

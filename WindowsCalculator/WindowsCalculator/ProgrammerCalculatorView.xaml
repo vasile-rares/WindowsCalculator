@@ -9,7 +9,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="140" />
-            <RowDefinition Height="60" />
+            <RowDefinition Height="100" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -21,14 +21,12 @@
                 <RowDefinition Height="70" />
             </Grid.RowDefinitions>
 
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Height="40">
-                <TextBlock x:Name="TitleTextBlock"
+            <TextBlock x:Name="TitleTextBlock"
                            Text="Programmer"
                            Foreground="White"
                            FontSize="20"
                            FontWeight="SemiBold"
                            VerticalAlignment="Center" Margin="15,0,0,0" />
-            </StackPanel>
 
             <TextBlock Grid.Row="1" x:Name="ExpressionTextBlock"
                        Text="{Binding ExpressionText}"
@@ -47,34 +45,31 @@
         </Grid>
 
         <!-- Number Format Selection Area -->
-        <Grid Grid.Row="1" Background="#202020" Margin="3,0,3,0">
+        <Grid Grid.Row="1" Background="Transparent" Margin="5,0,5,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="30" />
-                <RowDefinition Height="30" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
 
             <Grid.Resources>
                 <Style x:Key="NumberFormatButtonStyle" TargetType="RadioButton">
                     <Setter Property="Background" Value="Transparent" />
                     <Setter Property="Foreground" Value="White" />
                     <Setter Property="FontSize" Value="12" />
-                    <Setter Property="FontWeight" Value="SemiBold" />
+                    <Setter Property="FontWeight" Value="Regular" />
                     <Setter Property="Margin" Value="1" />
                     <Setter Property="BorderThickness" Value="0" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="RadioButton">
                                 <Border x:Name="buttonBorder" CornerRadius="4"
-                                        Background="{TemplateBinding Background}"
-                                        BorderThickness="0">
-                                    <ContentPresenter HorizontalAlignment="Center"
-                                                      VerticalAlignment="Center" />
+                                Background="{TemplateBinding Background}"
+                                BorderThickness="0">
+                                    <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
+                                        <TextBlock Text="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                                    </StackPanel>
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
@@ -94,24 +89,11 @@
             </Grid.Resources>
 
             <!-- Number format selection -->
-            <RadioButton Grid.Row="0" Grid.Column="0" Content="HEX" Style="{StaticResource NumberFormatButtonStyle}"
-                        GroupName="NumberFormat" IsChecked="True" />
-            <RadioButton Grid.Row="0" Grid.Column="1" Content="DEC" Style="{StaticResource NumberFormatButtonStyle}"
-                        GroupName="NumberFormat" />
-            <RadioButton Grid.Row="0" Grid.Column="2" Content="OCT" Style="{StaticResource NumberFormatButtonStyle}"
-                        GroupName="NumberFormat" />
-            <RadioButton Grid.Row="0" Grid.Column="3" Content="BIN" Style="{StaticResource NumberFormatButtonStyle}"
-                        GroupName="NumberFormat" />
-
-            <!-- Bit length selection -->
-            <RadioButton Grid.Row="1" Grid.Column="0" Content="QWORD" Style="{StaticResource NumberFormatButtonStyle}"
-                        GroupName="BitLength" IsChecked="True" />
-            <RadioButton Grid.Row="1" Grid.Column="1" Content="DWORD" Style="{StaticResource NumberFormatButtonStyle}"
-                        GroupName="BitLength" />
-            <RadioButton Grid.Row="1" Grid.Column="2" Content="WORD" Style="{StaticResource NumberFormatButtonStyle}"
-                        GroupName="BitLength" />
-            <RadioButton Grid.Row="1" Grid.Column="3" Content="BYTE" Style="{StaticResource NumberFormatButtonStyle}"
-                        GroupName="BitLength" />
+            <RadioButton Grid.Row="0" Content="HEX" Style="{StaticResource NumberFormatButtonStyle}"
+                         IsChecked="True" Checked="RadioButton_Checked" />
+            <RadioButton Grid.Row="1" Content="DEC" Style="{StaticResource NumberFormatButtonStyle}" />
+            <RadioButton Grid.Row="2" Content="OCT" Style="{StaticResource NumberFormatButtonStyle}" />
+            <RadioButton Grid.Row="3" Content="BIN" Style="{StaticResource NumberFormatButtonStyle}" />
         </Grid>
 
         <!-- Buttons Area -->
@@ -125,6 +107,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -205,7 +188,7 @@
                                         Background="{TemplateBinding Background}"
                                         BorderThickness="0">
                                     <ContentPresenter HorizontalAlignment="Center"
-                                                      VerticalAlignment="Center" />
+                                                      VerticalAlignment="Center" Margin="0,-5,0,0" />
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
@@ -234,7 +217,7 @@
                                         Background="{TemplateBinding Background}"
                                         BorderThickness="0">
                                     <ContentPresenter HorizontalAlignment="Center"
-                                                      VerticalAlignment="Center" />
+                                                      VerticalAlignment="Center" Margin="0,-5,0,0" />
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
@@ -272,62 +255,65 @@
                 </Style>
             </Grid.Resources>
 
-            <!-- Row 0 - Special Functions -->
-            <Button Grid.Row="0" Grid.Column="0" Content="&lt;&lt;" Style="{StaticResource SpecialButtonStyle}" />
-            <Button Grid.Row="0" Grid.Column="1" Content="CE" Style="{StaticResource SpecialButtonStyle}"
-                    Command="{Binding ClearEntryCommand}" />
-            <Button Grid.Row="0" Grid.Column="2" Content="C" Style="{StaticResource SpecialButtonStyle}"
+            <!-- Row 0 {A,<<,>>,CE,⌫} -->
+            <Button Grid.Row="0" Grid.Column="0" Content="A" Style="{StaticResource ButtonStyle}" />
+            <Button Grid.Row="0" Grid.Column="1" Content="&lt;&lt;" Style="{StaticResource SpecialButtonStyle}" />
+            <Button Grid.Row="0" Grid.Column="2" Content="&gt;&gt;" Style="{StaticResource SpecialButtonStyle}" />
+            <Button Grid.Row="0" Grid.Column="3" Content="CE" Style="{StaticResource SpecialButtonStyle}"
                     Command="{Binding ClearCommand}" />
-            <Button Grid.Row="0" Grid.Column="3" Content="⌫" Style="{StaticResource SpecialButtonStyle}"
+            <Button Grid.Row="0" Grid.Column="4" Content="⌫" Style="{StaticResource SpecialButtonStyle}"
                     Command="{Binding BackspaceCommand}" />
 
-            <!-- Row 1 - HEX buttons/OR -->
-            <Button Grid.Row="1" Grid.Column="0" Content="A" Style="{StaticResource SpecialButtonStyle}" />
-            <Button Grid.Row="1" Grid.Column="1" Content="B" Style="{StaticResource SpecialButtonStyle}" />
-            <Button Grid.Row="1" Grid.Column="2" Content="C" Style="{StaticResource SpecialButtonStyle}" />
-            <Button Grid.Row="1" Grid.Column="3" Content="OR" Style="{StaticResource MathOperationButtonStyle}" />
+            <!-- Row 1 {B,(,),%,÷} -->
+            <Button Grid.Row="1" Grid.Column="0" Content="B" Style="{StaticResource ButtonStyle}" />
+            <Button Grid.Row="1" Grid.Column="1" Content="(" Style="{StaticResource SpecialButtonStyle}" />
+            <Button Grid.Row="1" Grid.Column="2" Content=")" Style="{StaticResource SpecialButtonStyle}" />
+            <Button Grid.Row="1" Grid.Column="3" Content="%" Style="{StaticResource SpecialButtonStyle}" />
+            <Button Grid.Row="1" Grid.Column="4" Content="÷" Style="{StaticResource MathOperationButtonStyle}"
+                    Command="{Binding OperationCommand}" CommandParameter="÷" />
 
-            <!-- Row 2 - More HEX buttons/AND -->
-            <Button Grid.Row="2" Grid.Column="0" Content="D" Style="{StaticResource SpecialButtonStyle}" />
-            <Button Grid.Row="2" Grid.Column="1" Content="E" Style="{StaticResource SpecialButtonStyle}" />
-            <Button Grid.Row="2" Grid.Column="2" Content="F" Style="{StaticResource SpecialButtonStyle}" />
-            <Button Grid.Row="2" Grid.Column="3" Content="AND" Style="{StaticResource MathOperationButtonStyle}" />
-
-            <!-- Row 3 - 7,8,9,shifts -->
-            <Button Grid.Row="3" Grid.Column="0" Content="7" Style="{StaticResource ButtonStyle}"
+            <!-- Row 2 {C,7,8,9,×} -->
+            <Button Grid.Row="2" Grid.Column="0" Content="C" Style="{StaticResource ButtonStyle}" />
+            <Button Grid.Row="2" Grid.Column="1" Content="7" Style="{StaticResource ButtonStyle}"
                     Command="{Binding NumberCommand}" CommandParameter="7" />
-            <Button Grid.Row="3" Grid.Column="1" Content="8" Style="{StaticResource ButtonStyle}"
+            <Button Grid.Row="2" Grid.Column="2" Content="8" Style="{StaticResource ButtonStyle}"
                     Command="{Binding NumberCommand}" CommandParameter="8" />
-            <Button Grid.Row="3" Grid.Column="2" Content="9" Style="{StaticResource ButtonStyle}"
+            <Button Grid.Row="2" Grid.Column="3" Content="9" Style="{StaticResource ButtonStyle}"
                     Command="{Binding NumberCommand}" CommandParameter="9" />
-            <Button Grid.Row="3" Grid.Column="3" Content="XOR" Style="{StaticResource MathOperationButtonStyle}" />
+            <Button Grid.Row="2" Grid.Column="4" Content="×" Style="{StaticResource MathOperationButtonStyle}"
+                    Command="{Binding OperationCommand}" CommandParameter="×" />
 
-            <!-- Row 4 - 4,5,6,NOT -->
-            <Button Grid.Row="4" Grid.Column="0" Content="4" Style="{StaticResource ButtonStyle}"
+            <!-- Row 3 {D,4,5,6,-} -->
+            <Button Grid.Row="3" Grid.Column="0" Content="D" Style="{StaticResource ButtonStyle}" />
+            <Button Grid.Row="3" Grid.Column="1" Content="4" Style="{StaticResource ButtonStyle}"
                     Command="{Binding NumberCommand}" CommandParameter="4" />
-            <Button Grid.Row="4" Grid.Column="1" Content="5" Style="{StaticResource ButtonStyle}"
+            <Button Grid.Row="3" Grid.Column="2" Content="5" Style="{StaticResource ButtonStyle}"
                     Command="{Binding NumberCommand}" CommandParameter="5" />
-            <Button Grid.Row="4" Grid.Column="2" Content="6" Style="{StaticResource ButtonStyle}"
+            <Button Grid.Row="3" Grid.Column="3" Content="6" Style="{StaticResource ButtonStyle}"
                     Command="{Binding NumberCommand}" CommandParameter="6" />
-            <Button Grid.Row="4" Grid.Column="3" Content="NOT" Style="{StaticResource MathOperationButtonStyle}" />
+            <Button Grid.Row="3" Grid.Column="4" Content="-" Style="{StaticResource MathOperationButtonStyle}"
+                    Command="{Binding OperationCommand}" CommandParameter="-" />
 
-            <!-- Row 5 - 1,2,3,= -->
-            <Button Grid.Row="5" Grid.Column="0" Content="1" Style="{StaticResource ButtonStyle}"
+            <!-- Row 4 {E,1,2,3,+} -->
+            <Button Grid.Row="4" Grid.Column="0" Content="E" Style="{StaticResource ButtonStyle}" />
+            <Button Grid.Row="4" Grid.Column="1" Content="1" Style="{StaticResource ButtonStyle}"
                     Command="{Binding NumberCommand}" CommandParameter="1" />
-            <Button Grid.Row="5" Grid.Column="1" Content="2" Style="{StaticResource ButtonStyle}"
+            <Button Grid.Row="4" Grid.Column="2" Content="2" Style="{StaticResource ButtonStyle}"
                     Command="{Binding NumberCommand}" CommandParameter="2" />
-            <Button Grid.Row="5" Grid.Column="2" Content="3" Style="{StaticResource ButtonStyle}"
+            <Button Grid.Row="4" Grid.Column="3" Content="3" Style="{StaticResource ButtonStyle}"
                     Command="{Binding NumberCommand}" CommandParameter="3" />
-            <Button Grid.Row="5" Grid.Column="3" Content="=" Style="{StaticResource OperationButtonStyle}"
-                    Command="{Binding EqualsCommand}" />
+            <Button Grid.Row="4" Grid.Column="4" Content="+" Style="{StaticResource MathOperationButtonStyle}"
+                    Command="{Binding OperationCommand}" CommandParameter="+" />
 
-            <!-- Row 6 - +/-,0,.,= -->
-            <Button Grid.Row="6" Grid.Column="0" Content="±" Style="{StaticResource ButtonStyle}"
+            <!-- Row 5 {F,±,0,.,=} -->
+            <Button Grid.Row="5" Grid.Column="0" Content="F" Style="{StaticResource ButtonStyle}" />
+            <Button Grid.Row="5" Grid.Column="1" Content="±" Style="{StaticResource ButtonStyle}"
                     Command="{Binding NegateCommand}" />
-            <Button Grid.Row="6" Grid.Column="1" Content="0" Style="{StaticResource ButtonStyle}"
+            <Button Grid.Row="5" Grid.Column="2" Content="0" Style="{StaticResource ButtonStyle}"
                     Command="{Binding NumberCommand}" CommandParameter="0" />
-            <Button Grid.Row="6" Grid.Column="2" Content="." Style="{StaticResource DisabledButtonStyle}" />
-            <Button Grid.Row="6" Grid.Column="3" Content="MOD" Style="{StaticResource MathOperationButtonStyle}" />
+            <Button Grid.Row="5" Grid.Column="3" Content="." Style="{StaticResource DisabledButtonStyle}" />
+            <Button Grid.Row="5" Grid.Column="4" Content="=" Style="{StaticResource OperationButtonStyle}"
+                    Command="{Binding EqualsCommand}" />
         </Grid>
     </Grid>
 </UserControl>

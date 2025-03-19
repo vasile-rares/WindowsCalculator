@@ -28,11 +28,11 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         _viewModel = new CalculatorViewModel();
-        
+
         // Initialize calculator views
         _standardCalculatorView = new StandardCalculatorView { DataContext = _viewModel };
         _programmerCalculatorView = new ProgrammerCalculatorView { DataContext = _viewModel };
-        
+
         // Set standard view as default
         CalculatorViewContent.Content = _standardCalculatorView;
     }
@@ -78,9 +78,9 @@ public partial class MainWindow : Window
         // Create animation to slide the menu in from left to right
         var animation = new DoubleAnimation
         {
-            From = -205,
+            From = -255,
             To = 0, // Width of the menu
-            Duration = TimeSpan.FromMilliseconds(250),
+            Duration = TimeSpan.FromMilliseconds(150),
             EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
         };
 
@@ -89,9 +89,6 @@ public partial class MainWindow : Window
         translateTransform.BeginAnimation(TranslateTransform.XProperty, animation);
 
         _isMenuOpen = true;
-
-        // Ensure hamburger button stays on top
-        HamburgerButton.SetValue(Panel.ZIndexProperty, 100);
     }
 
     private void CloseMenu()
@@ -100,8 +97,8 @@ public partial class MainWindow : Window
         var animation = new DoubleAnimation
         {
             From = 0,
-            To = -205,
-            Duration = TimeSpan.FromMilliseconds(250),
+            To = -255,
+            Duration = TimeSpan.FromMilliseconds(150),
             EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
         };
 
@@ -111,14 +108,14 @@ public partial class MainWindow : Window
 
         _isMenuOpen = false;
     }
-    
+
     // Switch to the Standard calculator view
     private void StandardButton_Click(object sender, RoutedEventArgs e)
     {
         CalculatorViewContent.Content = _standardCalculatorView;
         CloseMenu();
     }
-    
+
     // Switch to the Programmer calculator view
     private void ProgrammerButton_Click(object sender, RoutedEventArgs e)
     {
