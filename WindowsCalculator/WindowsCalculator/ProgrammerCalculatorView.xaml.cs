@@ -1,6 +1,5 @@
-using System;
-using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace WindowsCalculator
 {
@@ -12,10 +11,9 @@ namespace WindowsCalculator
         public ProgrammerCalculatorView()
         {
             InitializeComponent();
-        }
-
-        private void RadioButton_Checked(object sender, RoutedEventArgs e)
-        {
+            // Asigurăm focusul pe control
+            this.Loaded += (s, e) => Keyboard.Focus(this);
+            this.GotFocus += (s, e) => e.Handled = true;
         }
     }
 }

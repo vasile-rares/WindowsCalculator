@@ -4,8 +4,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:WindowsCalculator"
+             xmlns:converters="clr-namespace:WindowsCalculator.Converters"
              mc:Ignorable="d"
-             Height="471" Width="321">
+             Height="471" Width="321"
+             Focusable="True"
+             FocusVisualStyle="{x:Null}"
+             IsTabStop="True">
+    <UserControl.Resources>
+        <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
+        <converters:ButtonEnabledConverter x:Key="ButtonEnabledConverter" />
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="140" />
@@ -57,7 +65,7 @@
                 <Style x:Key="NumberFormatButtonStyle" TargetType="RadioButton">
                     <Setter Property="Background" Value="Transparent" />
                     <Setter Property="Foreground" Value="White" />
-                    <Setter Property="FontSize" Value="12" />
+                    <Setter Property="FontSize" Value="13" />
                     <Setter Property="FontWeight" Value="Regular" />
                     <Setter Property="Margin" Value="1" />
                     <Setter Property="BorderThickness" Value="0" />
@@ -67,9 +75,38 @@
                                 <Border x:Name="buttonBorder" CornerRadius="4"
                                 Background="{TemplateBinding Background}"
                                 BorderThickness="0">
-                                    <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
-                                        <TextBlock Text="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
-                                    </StackPanel>
+                                    <Grid HorizontalAlignment="Stretch" Width="280">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="55" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,0,0" FontWeight="{TemplateBinding FontWeight}" />
+                                        <TextBlock Grid.Column="1" Text="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                                                 VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,10,0"
+                                                 FontSize="13" Foreground="#B0FFFFFF" FontFamily="Segoe UI"
+                                                 TextTrimming="CharacterEllipsis" MaxWidth="200">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsVisible" Value="True">
+                                                            <Trigger.EnterActions>
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.7" To="1" Duration="0:0:0.3" />
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </Trigger.EnterActions>
+                                                        </Trigger>
+                                                        <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource FindAncestor, AncestorType=RadioButton}}" Value="True">
+                                                            <Setter Property="Foreground" Value="#4CC2FF" />
+                                                            <Setter Property="FontWeight" Value="SemiBold" />
+                                                            <Setter Property="FontSize" Value="14" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Grid>
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
@@ -80,6 +117,8 @@
                                     </Trigger>
                                     <Trigger Property="IsChecked" Value="True">
                                         <Setter TargetName="buttonBorder" Property="Background" Value="#2D2D2D" />
+                                        <Setter Property="Foreground" Value="#4CC2FF" />
+                                        <Setter Property="FontWeight" Value="SemiBold" />
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -90,10 +129,17 @@
 
             <!-- Number format selection -->
             <RadioButton Grid.Row="0" Content="HEX" Style="{StaticResource NumberFormatButtonStyle}"
-                         IsChecked="True" Checked="RadioButton_Checked" />
-            <RadioButton Grid.Row="1" Content="DEC" Style="{StaticResource NumberFormatButtonStyle}" />
-            <RadioButton Grid.Row="2" Content="OCT" Style="{StaticResource NumberFormatButtonStyle}" />
-            <RadioButton Grid.Row="3" Content="BIN" Style="{StaticResource NumberFormatButtonStyle}" />
+                         IsChecked="{Binding CurrentBase, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=HEX}"
+                         Tag="{Binding HexValue}" />
+            <RadioButton Grid.Row="1" Content="DEC" Style="{StaticResource NumberFormatButtonStyle}"
+                         IsChecked="{Binding CurrentBase, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=DEC}"
+                         Tag="{Binding DecValue}" />
+            <RadioButton Grid.Row="2" Content="OCT" Style="{StaticResource NumberFormatButtonStyle}"
+                         IsChecked="{Binding CurrentBase, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=OCT}"
+                         Tag="{Binding OctValue}" />
+            <RadioButton Grid.Row="3" Content="BIN" Style="{StaticResource NumberFormatButtonStyle}"
+                         IsChecked="{Binding CurrentBase, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=BIN}"
+                         Tag="{Binding BinValue}" />
         </Grid>
 
         <!-- Buttons Area -->
@@ -138,6 +184,10 @@
                                     </Trigger>
                                     <Trigger Property="IsPressed" Value="True">
                                         <Setter TargetName="buttonBorder" Property="Background" Value="#FF292929" />
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Background" Value="#262626" />
+                                        <Setter Property="Foreground" Value="#303030" />
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -233,7 +283,7 @@
                 </Style>
 
                 <Style x:Key="DisabledButtonStyle" TargetType="Button">
-                    <Setter Property="Background" Value="#323232" />
+                    <Setter Property="Background" Value="#262626" />
                     <Setter Property="Foreground" Value="#666666" />
                     <Setter Property="FontSize" Value="14.5" />
                     <Setter Property="FontWeight" Value="Regular" />
@@ -256,61 +306,84 @@
             </Grid.Resources>
 
             <!-- Row 0 {A,<<,>>,CE,⌫} -->
-            <Button Grid.Row="0" Grid.Column="0" Content="A" Style="{StaticResource ButtonStyle}" />
-            <Button Grid.Row="0" Grid.Column="1" Content="&lt;&lt;" Style="{StaticResource SpecialButtonStyle}" />
-            <Button Grid.Row="0" Grid.Column="2" Content="&gt;&gt;" Style="{StaticResource SpecialButtonStyle}" />
+            <Button Grid.Row="0" Grid.Column="0" Content="A" Style="{StaticResource ButtonStyle}"
+                    Command="{Binding NumberCommand}" CommandParameter="A"
+                    IsEnabled="{Binding CurrentBase, Converter={StaticResource ButtonEnabledConverter}, ConverterParameter=A}" />
+            <Button Grid.Row="0" Grid.Column="1" Content="&lt;&lt;" Style="{StaticResource DisabledButtonStyle}" />
+            <Button Grid.Row="0" Grid.Column="2" Content="&gt;&gt;" Style="{StaticResource DisabledButtonStyle}" />
             <Button Grid.Row="0" Grid.Column="3" Content="CE" Style="{StaticResource SpecialButtonStyle}"
                     Command="{Binding ClearCommand}" />
             <Button Grid.Row="0" Grid.Column="4" Content="⌫" Style="{StaticResource SpecialButtonStyle}"
                     Command="{Binding BackspaceCommand}" />
 
             <!-- Row 1 {B,(,),%,÷} -->
-            <Button Grid.Row="1" Grid.Column="0" Content="B" Style="{StaticResource ButtonStyle}" />
-            <Button Grid.Row="1" Grid.Column="1" Content="(" Style="{StaticResource SpecialButtonStyle}" />
-            <Button Grid.Row="1" Grid.Column="2" Content=")" Style="{StaticResource SpecialButtonStyle}" />
-            <Button Grid.Row="1" Grid.Column="3" Content="%" Style="{StaticResource SpecialButtonStyle}" />
+            <Button Grid.Row="1" Grid.Column="0" Content="B" Style="{StaticResource ButtonStyle}"
+                    Command="{Binding NumberCommand}" CommandParameter="B"
+                    IsEnabled="{Binding CurrentBase, Converter={StaticResource ButtonEnabledConverter}, ConverterParameter=B}" />
+            <Button Grid.Row="1" Grid.Column="1" Content="(" Style="{StaticResource DisabledButtonStyle}" />
+            <Button Grid.Row="1" Grid.Column="2" Content=")" Style="{StaticResource DisabledButtonStyle}" />
+            <Button Grid.Row="1" Grid.Column="3" Content="%" Style="{StaticResource SpecialButtonStyle}"
+                    Command="{Binding PercentageCommand}" />
             <Button Grid.Row="1" Grid.Column="4" Content="÷" Style="{StaticResource MathOperationButtonStyle}"
                     Command="{Binding OperationCommand}" CommandParameter="÷" />
 
             <!-- Row 2 {C,7,8,9,×} -->
-            <Button Grid.Row="2" Grid.Column="0" Content="C" Style="{StaticResource ButtonStyle}" />
+            <Button Grid.Row="2" Grid.Column="0" Content="C" Style="{StaticResource ButtonStyle}"
+                    Command="{Binding NumberCommand}" CommandParameter="C"
+                    IsEnabled="{Binding CurrentBase, Converter={StaticResource ButtonEnabledConverter}, ConverterParameter=C}" />
             <Button Grid.Row="2" Grid.Column="1" Content="7" Style="{StaticResource ButtonStyle}"
-                    Command="{Binding NumberCommand}" CommandParameter="7" />
+                    Command="{Binding NumberCommand}" CommandParameter="7"
+                    IsEnabled="{Binding CurrentBase, Converter={StaticResource ButtonEnabledConverter}, ConverterParameter=7}" />
             <Button Grid.Row="2" Grid.Column="2" Content="8" Style="{StaticResource ButtonStyle}"
-                    Command="{Binding NumberCommand}" CommandParameter="8" />
+                    Command="{Binding NumberCommand}" CommandParameter="8"
+                    IsEnabled="{Binding CurrentBase, Converter={StaticResource ButtonEnabledConverter}, ConverterParameter=8}" />
             <Button Grid.Row="2" Grid.Column="3" Content="9" Style="{StaticResource ButtonStyle}"
-                    Command="{Binding NumberCommand}" CommandParameter="9" />
+                    Command="{Binding NumberCommand}" CommandParameter="9"
+                    IsEnabled="{Binding CurrentBase, Converter={StaticResource ButtonEnabledConverter}, ConverterParameter=9}" />
             <Button Grid.Row="2" Grid.Column="4" Content="×" Style="{StaticResource MathOperationButtonStyle}"
                     Command="{Binding OperationCommand}" CommandParameter="×" />
 
             <!-- Row 3 {D,4,5,6,-} -->
-            <Button Grid.Row="3" Grid.Column="0" Content="D" Style="{StaticResource ButtonStyle}" />
+            <Button Grid.Row="3" Grid.Column="0" Content="D" Style="{StaticResource ButtonStyle}"
+                    Command="{Binding NumberCommand}" CommandParameter="D"
+                    IsEnabled="{Binding CurrentBase, Converter={StaticResource ButtonEnabledConverter}, ConverterParameter=D}" />
             <Button Grid.Row="3" Grid.Column="1" Content="4" Style="{StaticResource ButtonStyle}"
-                    Command="{Binding NumberCommand}" CommandParameter="4" />
+                    Command="{Binding NumberCommand}" CommandParameter="4"
+                    IsEnabled="{Binding CurrentBase, Converter={StaticResource ButtonEnabledConverter}, ConverterParameter=4}" />
             <Button Grid.Row="3" Grid.Column="2" Content="5" Style="{StaticResource ButtonStyle}"
-                    Command="{Binding NumberCommand}" CommandParameter="5" />
+                    Command="{Binding NumberCommand}" CommandParameter="5"
+                    IsEnabled="{Binding CurrentBase, Converter={StaticResource ButtonEnabledConverter}, ConverterParameter=5}" />
             <Button Grid.Row="3" Grid.Column="3" Content="6" Style="{StaticResource ButtonStyle}"
-                    Command="{Binding NumberCommand}" CommandParameter="6" />
+                    Command="{Binding NumberCommand}" CommandParameter="6"
+                    IsEnabled="{Binding CurrentBase, Converter={StaticResource ButtonEnabledConverter}, ConverterParameter=6}" />
             <Button Grid.Row="3" Grid.Column="4" Content="-" Style="{StaticResource MathOperationButtonStyle}"
                     Command="{Binding OperationCommand}" CommandParameter="-" />
 
             <!-- Row 4 {E,1,2,3,+} -->
-            <Button Grid.Row="4" Grid.Column="0" Content="E" Style="{StaticResource ButtonStyle}" />
+            <Button Grid.Row="4" Grid.Column="0" Content="E" Style="{StaticResource ButtonStyle}"
+                    Command="{Binding NumberCommand}" CommandParameter="E"
+                    IsEnabled="{Binding CurrentBase, Converter={StaticResource ButtonEnabledConverter}, ConverterParameter=E}" />
             <Button Grid.Row="4" Grid.Column="1" Content="1" Style="{StaticResource ButtonStyle}"
-                    Command="{Binding NumberCommand}" CommandParameter="1" />
+                    Command="{Binding NumberCommand}" CommandParameter="1"
+                    IsEnabled="{Binding CurrentBase, Converter={StaticResource ButtonEnabledConverter}, ConverterParameter=1}" />
             <Button Grid.Row="4" Grid.Column="2" Content="2" Style="{StaticResource ButtonStyle}"
-                    Command="{Binding NumberCommand}" CommandParameter="2" />
+                    Command="{Binding NumberCommand}" CommandParameter="2"
+                    IsEnabled="{Binding CurrentBase, Converter={StaticResource ButtonEnabledConverter}, ConverterParameter=2}" />
             <Button Grid.Row="4" Grid.Column="3" Content="3" Style="{StaticResource ButtonStyle}"
-                    Command="{Binding NumberCommand}" CommandParameter="3" />
+                    Command="{Binding NumberCommand}" CommandParameter="3"
+                    IsEnabled="{Binding CurrentBase, Converter={StaticResource ButtonEnabledConverter}, ConverterParameter=3}" />
             <Button Grid.Row="4" Grid.Column="4" Content="+" Style="{StaticResource MathOperationButtonStyle}"
                     Command="{Binding OperationCommand}" CommandParameter="+" />
 
             <!-- Row 5 {F,±,0,.,=} -->
-            <Button Grid.Row="5" Grid.Column="0" Content="F" Style="{StaticResource ButtonStyle}" />
+            <Button Grid.Row="5" Grid.Column="0" Content="F" Style="{StaticResource ButtonStyle}"
+                    Command="{Binding NumberCommand}" CommandParameter="F"
+                    IsEnabled="{Binding CurrentBase, Converter={StaticResource ButtonEnabledConverter}, ConverterParameter=F}" />
             <Button Grid.Row="5" Grid.Column="1" Content="±" Style="{StaticResource ButtonStyle}"
                     Command="{Binding NegateCommand}" />
             <Button Grid.Row="5" Grid.Column="2" Content="0" Style="{StaticResource ButtonStyle}"
-                    Command="{Binding NumberCommand}" CommandParameter="0" />
+                    Command="{Binding NumberCommand}" CommandParameter="0"
+                    IsEnabled="{Binding CurrentBase, Converter={StaticResource ButtonEnabledConverter}, ConverterParameter=0}" />
             <Button Grid.Row="5" Grid.Column="3" Content="." Style="{StaticResource DisabledButtonStyle}" />
             <Button Grid.Row="5" Grid.Column="4" Content="=" Style="{StaticResource OperationButtonStyle}"
                     Command="{Binding EqualsCommand}" />

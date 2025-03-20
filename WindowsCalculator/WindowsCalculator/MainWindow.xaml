@@ -9,7 +9,11 @@
         Icon="Calculator.ico"
         ResizeMode="NoResize" Background="Transparent"
         WindowStyle="None" AllowsTransparency="True"
-        FontFamily="Segoe UI Variable">
+        FontFamily="Segoe UI Variable"
+        Focusable="True"
+        FocusManager.FocusedElement="{Binding ElementName=CalculatorViewContent}"
+        KeyboardNavigation.TabNavigation="None"
+        WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style x:Key="MainBorderStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="8" />
@@ -172,6 +176,21 @@
                                 Style="{StaticResource MenuButtonStyle}" Margin="5,0,5,0"
                                 Click="ProgrammerButton_Click" />
 
+                        <!-- Edit/Clipboard Operations -->
+                        <TextBlock Text="Edit" Foreground="#C6C6C6" FontSize="14" FontWeight="SemiBold" Margin="15,15,0,10" HorizontalAlignment="Left" />
+
+                        <Button Content="Cut" Foreground="White" FontSize="14" Height="40"
+                                Style="{StaticResource MenuButtonStyle}" Margin="5,0,5,0"
+                                Click="CutButton_Click" />
+
+                        <Button Content="Copy" Foreground="White" FontSize="14" Height="40"
+                                Style="{StaticResource MenuButtonStyle}" Margin="5,0,5,0"
+                                Click="CopyButton_Click" />
+
+                        <Button Content="Paste" Foreground="White" FontSize="14" Height="40"
+                                Style="{StaticResource MenuButtonStyle}" Margin="5,0,5,0"
+                                Click="PasteButton_Click" />
+
                         <TextBlock Text="Settings" Foreground="#C6C6C6" FontSize="14" FontWeight="SemiBold" Margin="15,15,0,10" HorizontalAlignment="Left" />
 
                         <StackPanel Orientation="Horizontal" Margin="15,5,5,5">
@@ -188,8 +207,75 @@
                         <TextBlock Text="Help" Foreground="#C6C6C6" FontSize="14" FontWeight="SemiBold" Margin="15,15,0,10" HorizontalAlignment="Left" />
 
                         <Button Content="About" Foreground="White" FontSize="14" Height="40"
-                                Style="{StaticResource MenuButtonStyle}" Margin="5,0,5,2" />
+                                Style="{StaticResource MenuButtonStyle}" Margin="5,0,5,2"
+                                Click="AboutButton_Click" />
+
+                        <TextBlock x:Name="SettingsStatusText" Text="Settings saved" Foreground="#80C6C6C6"
+                                   FontSize="11" Margin="5,10,5,5" HorizontalAlignment="Center"
+                                   Opacity="0" />
                     </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- About Dialog Template -->
+            <Grid x:Name="AboutOverlay" Visibility="Collapsed" Background="#80000000" Grid.RowSpan="2" Panel.ZIndex="200"
+                  MouseLeftButtonDown="AboutOverlay_MouseLeftButtonDown">
+                <Border Width="280" Height="180" Background="#2C2C2C" CornerRadius="8" BorderBrush="#414141" BorderThickness="1"
+                        MouseLeftButtonDown="AboutDialog_MouseLeftButtonDown">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="40" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Dialog Header -->
+                        <TextBlock Text="About" Foreground="White" FontSize="16" FontWeight="SemiBold"
+                                   VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15,0,0,0" />
+
+                        <!-- Dialog Content -->
+                        <StackPanel Grid.Row="1" Margin="15,0">
+                            <TextBlock Text="Windows Calculator" FontWeight="SemiBold" Foreground="White"
+                                       FontSize="14" Margin="0,0,0,10" />
+                            <TextBlock Text="Created by:" Foreground="#BFD6D6D6"
+                                       FontSize="12" Margin="0,0,0,5" />
+                            <TextBlock Text="Vasile Rares Mihail" Foreground="White"
+                                       FontSize="14" Margin="0,0,0,5" />
+                            <TextBlock Text="Group: 10LF234" Foreground="White"
+                                       FontSize="14" Margin="0,0,0,5" />
+                        </StackPanel>
+
+                        <!-- Dialog Buttons -->
+                        <Button Grid.Row="2" Content="Close" Width="80" Height="28"
+                                HorizontalAlignment="Right" Margin="0,0,15,0"
+                                Click="CloseAboutButton_Click">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="#4CC2FF" />
+                                    <Setter Property="Foreground" Value="Black" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="border" Background="{TemplateBinding Background}"
+                                                        BorderThickness="0" CornerRadius="4">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="#47B1E8" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="#42A1D2" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </Grid>
                 </Border>
             </Grid>
 

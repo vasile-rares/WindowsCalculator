@@ -4,9 +4,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:WindowsCalculator"
+             xmlns:converters="clr-namespace:WindowsCalculator.Converters"
              mc:Ignorable="d"
              x:Name="standardCalculatorView"
-             Height="471" Width="321">
+             Height="471" Width="321"
+             Focusable="True"
+             FocusVisualStyle="{x:Null}"
+             IsTabStop="True">
+    <UserControl.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
+        <converters:ContainsTextConverter x:Key="ContainsTextConverter" />
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="140" />
@@ -16,7 +25,6 @@
 
         <!-- Display Area -->
         <Grid Grid.Row="0" Background="#202020">
-            <!-- Display Area -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
                 <RowDefinition Height="20" />
@@ -42,10 +50,94 @@
             <TextBlock Grid.Row="2" x:Name="ResultTextBlock"
                        Text="{Binding DisplayText}"
                        Foreground="White"
-                       FontSize="48"
                        FontWeight="SemiBold"
                        TextAlignment="Right"
-                       Margin="10,0,15,0" />
+                       Margin="10,0,15,0">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="48" />
+                        <Style.Triggers>
+                            <!-- Use ContainsTextConverter for more flexible error message handling -->
+                            <DataTrigger Binding="{Binding DisplayText, Converter={StaticResource ContainsTextConverter}, ConverterParameter=Cannot}" Value="True">
+                                <Setter Property="FontSize" Value="28" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText, Converter={StaticResource ContainsTextConverter}, ConverterParameter=Error}" Value="True">
+                                <Setter Property="FontSize" Value="24" />
+                            </DataTrigger>
+
+                            <!-- Keep specific error messages with exact sizing -->
+                            <DataTrigger Binding="{Binding DisplayText}" Value="Cannot compute square root of a negative number.">
+                                <Setter Property="FontSize" Value="22" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText}" Value="Error: Overflow.">
+                                <Setter Property="FontSize" Value="32" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText}" Value="Error: Value was either too large or too small for a Decimal.">
+                                <Setter Property="FontSize" Value="16" />
+                            </DataTrigger>
+
+                            <!-- Check for text lengths at specific values -->
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="12">
+                                <Setter Property="FontSize" Value="40" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="13">
+                                <Setter Property="FontSize" Value="39" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="14">
+                                <Setter Property="FontSize" Value="38" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="15">
+                                <Setter Property="FontSize" Value="37" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="16">
+                                <Setter Property="FontSize" Value="36" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="17">
+                                <Setter Property="FontSize" Value="35" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="18">
+                                <Setter Property="FontSize" Value="33" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="19">
+                                <Setter Property="FontSize" Value="31" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="20">
+                                <Setter Property="FontSize" Value="29" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="21">
+                                <Setter Property="FontSize" Value="27" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="22">
+                                <Setter Property="FontSize" Value="26" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="23">
+                                <Setter Property="FontSize" Value="25" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="24">
+                                <Setter Property="FontSize" Value="24" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="25">
+                                <Setter Property="FontSize" Value="23" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="26">
+                                <Setter Property="FontSize" Value="22" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="27">
+                                <Setter Property="FontSize" Value="21" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="28">
+                                <Setter Property="FontSize" Value="20" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="29">
+                                <Setter Property="FontSize" Value="19" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DisplayText.Length}" Value="30">
+                                <Setter Property="FontSize" Value="18" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
         </Grid>
 
         <!-- Memory Buttons Area -->
@@ -63,10 +155,10 @@
                 <Style x:Key="MemoryButtonStyle" TargetType="Button">
                     <Setter Property="Background" Value="Transparent" />
                     <Setter Property="Foreground" Value="White" />
-                    <Setter Property="FontSize" Value="12" />
-                    <Setter Property="FontWeight" Value="SemiBold" />
-                    <Setter Property="Margin" Value="1" />
                     <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="FontSize" Value="12" />
+                    <Setter Property="Width" Value="Auto" />
+                    <Setter Property="Height" Value="28" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="Button">
@@ -82,6 +174,37 @@
                                     </Trigger>
                                     <Trigger Property="IsPressed" Value="True">
                                         <Setter TargetName="buttonBorder" Property="Background" Value="#292929" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+
+                <!-- Style pentru butoanele de operații în lista de memorie -->
+                <Style x:Key="MemoryItemButtonStyle" TargetType="Button">
+                    <Setter Property="Background" Value="#323232" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="FontSize" Value="10" />
+                    <Setter Property="Width" Value="Auto" />
+                    <Setter Property="Height" Value="24" />
+                    <Setter Property="Margin" Value="1" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="buttonBorder" CornerRadius="3"
+                                        Background="{TemplateBinding Background}"
+                                        BorderThickness="0">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center" />
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="buttonBorder" Property="Background" Value="#3D3D3D" />
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="buttonBorder" Property="Background" Value="#383838" />
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -114,26 +237,57 @@
                         BorderBrush="#353535"
                         BorderThickness="1"
                         CornerRadius="5"
-                        Width="200"
-                        Height="303">
+                        Width="190"
+                        MinHeight="150"
+                        MaxHeight="350">
                     <StackPanel>
                         <TextBlock Text="Memory"
                                    Foreground="White"
                                    FontSize="16"
                                    Margin="10,5,0,10"
                                    FontWeight="SemiBold" />
-                        <!-- Empty menu content here -->
-                        <ListBox ItemsSource="{Binding MemoryValues}"
+                        <ListBox x:Name="MemoryList"
+                             ItemsSource="{Binding MemoryValues}"
                              Foreground="White"
                              Background="#252525"
                              BorderThickness="0"
                              Padding="5"
-                             Visibility="{Binding IsMemoryEmpty, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=False}">
+                             MaxHeight="300"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             Visibility="{Binding IsMemoryEmpty, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" Margin="5">
-                                        <TextBlock Text="{Binding}" Foreground="White" FontSize="14" />
-                                    </StackPanel>
+                                    <Border Background="Transparent" CornerRadius="4" Margin="0,2" Padding="8,6">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding}" Foreground="White" FontSize="14" FontWeight="SemiBold" />
+                                            <!-- Memory operation buttons for each item -->
+                                            <Grid Margin="0,6,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="30" />
+                                                    <ColumnDefinition Width="30" />
+                                                    <ColumnDefinition Width="30" />
+                                                    <ColumnDefinition Width="30" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Button Grid.Column="0" Content="MR"
+                                                        Tag="{Binding}"
+                                                        Click="MemoryItemRecall_Click"
+                                                        Style="{StaticResource MemoryItemButtonStyle}" />
+                                                <Button Grid.Column="1" Content="MC"
+                                                        Tag="{Binding}"
+                                                        Click="MemoryItemClear_Click"
+                                                        Style="{StaticResource MemoryItemButtonStyle}" />
+                                                <Button Grid.Column="2" Content="M+"
+                                                        Tag="{Binding}"
+                                                        Click="MemoryItemAdd_Click"
+                                                        Style="{StaticResource MemoryItemButtonStyle}" />
+                                                <Button Grid.Column="3" Content="M-"
+                                                        Tag="{Binding}"
+                                                        Click="MemoryItemSubtract_Click"
+                                                        Style="{StaticResource MemoryItemButtonStyle}" />
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
@@ -141,7 +295,7 @@
                         <TextBlock Text="No items in memory"
                             Foreground="#AAAAAA"
                             HorizontalAlignment="Center"
-                            Visibility="{Binding IsMemoryEmpty, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=True}"
+                            Visibility="{Binding IsMemoryEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"
                             Margin="0,40,0,0" />
                     </StackPanel>
                 </Border>
