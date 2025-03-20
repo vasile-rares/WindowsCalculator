@@ -172,6 +172,19 @@
                                 Style="{StaticResource MenuButtonStyle}" Margin="5,0,5,0"
                                 Click="ProgrammerButton_Click" />
 
+                        <TextBlock Text="Settings" Foreground="#C6C6C6" FontSize="14" FontWeight="SemiBold" Margin="15,15,0,10" HorizontalAlignment="Left" />
+
+                        <StackPanel Orientation="Horizontal" Margin="15,5,5,5">
+                            <CheckBox x:Name="DigitGroupingCheckBox"
+                                      IsChecked="{Binding UseDigitGrouping, Mode=TwoWay}"
+                                      VerticalAlignment="Center"
+                                      Foreground="White">
+                                <CheckBox.Content>
+                                    <TextBlock Text="Use digit grouping" Foreground="White" FontSize="14" />
+                                </CheckBox.Content>
+                            </CheckBox>
+                        </StackPanel>
+
                         <TextBlock Text="Help" Foreground="#C6C6C6" FontSize="14" FontWeight="SemiBold" Margin="15,15,0,10" HorizontalAlignment="Left" />
 
                         <Button Content="About" Foreground="White" FontSize="14" Height="40"

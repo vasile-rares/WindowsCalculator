@@ -26,15 +26,46 @@ public partial class MainWindow : Window
 
     public MainWindow()
     {
-        InitializeComponent();
+        // Creăm ViewModel-ul înainte de inițializarea componentelor
         _viewModel = new CalculatorViewModel();
 
-        // Initialize calculator views
+        // Setăm DataContext-ul pentru întreaga fereastră
+        DataContext = _viewModel;
+
+        InitializeComponent();
+
+        // Initialize calculator views și le setăm același ViewModel
         _standardCalculatorView = new StandardCalculatorView { DataContext = _viewModel };
         _programmerCalculatorView = new ProgrammerCalculatorView { DataContext = _viewModel };
 
         // Set standard view as default
         CalculatorViewContent.Content = _standardCalculatorView;
+
+        // Adăugăm un handler pentru evenimentele de tastatură
+        this.KeyDown += MainWindow_KeyDown;
+    }
+
+    // Handler pentru evenimentele de tastatură
+    private void MainWindow_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter || e.Key == Key.Return)
+        {
+            // Executăm comanda Equal la apăsarea tastei ENTER
+            if (_viewModel.EqualsCommand.CanExecute(null))
+            {
+                _viewModel.EqualsCommand.Execute(null);
+                e.Handled = true;
+            }
+        }
+        else if (e.Key == Key.Escape)
+        {
+            // Executăm comanda Clear la apăsarea tastei ESC
+            if (_viewModel.ClearCommand.CanExecute(null))
+            {
+                _viewModel.ClearCommand.Execute(null);
+                e.Handled = true;
+            }
+        }
     }
 
     // Event handler for dragging the window from the custom title bar

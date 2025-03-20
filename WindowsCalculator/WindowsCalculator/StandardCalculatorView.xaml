@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:WindowsCalculator"
              mc:Ignorable="d"
+             x:Name="standardCalculatorView"
              Height="471" Width="321">
     <Grid>
         <Grid.RowDefinitions>
@@ -99,7 +100,52 @@
                     Command="{Binding MemorySubtractCommand}" />
             <Button Grid.Column="4" Content="MS" Style="{StaticResource MemoryButtonStyle}" x:Name="MemoryStoreButton"
                     Command="{Binding MemoryStoreCommand}" />
-            <Button Grid.Column="5" Content="M▾" Style="{StaticResource MemoryButtonStyle}" x:Name="MemoryListButton" />
+            <Button Grid.Column="5" Content="M▾" Style="{StaticResource MemoryButtonStyle}" x:Name="MemoryListButton"
+                    Click="MemoryListButton_Click" />
+
+            <!-- Memory Popup -->
+            <Popup x:Name="MemoryPopup"
+                   PlacementTarget="{Binding ElementName=MemoryListButton}"
+                   Placement="Right"
+                   AllowsTransparency="True"
+                   StaysOpen="False"
+                   PopupAnimation="Slide">
+                <Border Background="#252525"
+                        BorderBrush="#353535"
+                        BorderThickness="1"
+                        CornerRadius="5"
+                        Width="200"
+                        Height="303">
+                    <StackPanel>
+                        <TextBlock Text="Memory"
+                                   Foreground="White"
+                                   FontSize="16"
+                                   Margin="10,5,0,10"
+                                   FontWeight="SemiBold" />
+                        <!-- Empty menu content here -->
+                        <ListBox ItemsSource="{Binding MemoryValues}"
+                             Foreground="White"
+                             Background="#252525"
+                             BorderThickness="0"
+                             Padding="5"
+                             Visibility="{Binding IsMemoryEmpty, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=False}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="5">
+                                        <TextBlock Text="{Binding}" Foreground="White" FontSize="14" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <TextBlock Text="No items in memory"
+                            Foreground="#AAAAAA"
+                            HorizontalAlignment="Center"
+                            Visibility="{Binding IsMemoryEmpty, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=True}"
+                            Margin="0,40,0,0" />
+                    </StackPanel>
+                </Border>
+            </Popup>
         </Grid>
 
         <!-- Buttons Area -->
