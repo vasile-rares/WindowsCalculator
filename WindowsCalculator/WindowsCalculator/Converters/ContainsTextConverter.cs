@@ -4,10 +4,6 @@ using System.Windows.Data;
 
 namespace WindowsCalculator.Converters
 {
-    /// <summary>
-    /// Converter that checks if a string value contains a specified substring.
-    /// Returns true if the value contains the parameter text, false otherwise.
-    /// </summary>
     public class ContainsTextConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -26,4 +22,4 @@ namespace WindowsCalculator.Converters
             throw new NotImplementedException();
         }
     }
-} 
+}

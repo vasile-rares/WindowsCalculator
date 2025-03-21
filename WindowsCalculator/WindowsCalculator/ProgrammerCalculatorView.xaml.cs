@@ -11,7 +11,8 @@ namespace WindowsCalculator
         public ProgrammerCalculatorView()
         {
             InitializeComponent();
-            // Asigurăm focusul pe control
+
+            // Asiguram focusul pe control
             this.Loaded += (s, e) => Keyboard.Focus(this);
             this.GotFocus += (s, e) => e.Handled = true;
         }

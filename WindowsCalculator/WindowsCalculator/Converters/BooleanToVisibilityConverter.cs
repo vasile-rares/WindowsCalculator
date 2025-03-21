@@ -11,6 +11,12 @@ namespace WindowsCalculator.Converters
         {
             if (value is bool boolValue)
             {
+                // Verificam daca parametrul specifica inversarea
+                bool shouldInvert = parameter != null && bool.Parse(parameter.ToString());
+
+                // Aplicam inversarea daca este necesar
+                boolValue = shouldInvert ? !boolValue : boolValue;
+
                 return boolValue ? Visibility.Visible : Visibility.Collapsed;
             }
             return Visibility.Collapsed;
@@ -20,9 +26,13 @@ namespace WindowsCalculator.Converters
         {
             if (value is Visibility visibility)
             {
-                return visibility == Visibility.Visible;
+                bool result = visibility == Visibility.Visible;
+
+                bool shouldInvert = parameter != null && bool.Parse(parameter.ToString());
+
+                return shouldInvert ? !result : result;
             }
             return false;
         }
     }
-} 
+}
